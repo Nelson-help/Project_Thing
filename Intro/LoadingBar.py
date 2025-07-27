@@ -45,3 +45,5 @@ app = QApplication([])
 window = LoadingBar()
 window.show()
 sys.exit(app.exec())
+
+# TODO Line 20: self.progress = 0 every update of label, change process instead of width to put percentage in line 38, rand progress

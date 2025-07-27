@@ -12,7 +12,7 @@ class ImageDisplay(QMainWindow):
         self.setWindowTitle("Image")
         self.label = QLabel(self)
 
-        space = QPixmap(os.path.join("Image_Examplar", "JPG.jpg"))
+        space = QPixmap(os.path.join("Image_Examplar", "JPG.jpg")) # Join path means create a path of Image_Examplar/JPG.jpg
         self.label.setPixmap(space)
         self.label.setFixedSize(space.size())
         
