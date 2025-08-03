@@ -1,13 +1,18 @@
 1.
-    White Full: H Order, H Central, V Central, Padding
+    White Full: H Order, H Central, V Central, Margin
         Purple: V Order, H Central, V Top, Padding
-            Circle: V Order, H Central, V Top, Padding
+            Circle: V Order, H Central, V Central, Padding
         White Right: V Order, H Left, V Central, Padding
-            Colored Tabs: H Order, H Auto, V Central, Padding
-            Black Tab: N/A Order, H Central, V Central, Padding
+            Colored Tabs: V Order, H N/A, V Auto, Padding N/A
+                Each Tab: H Order, H Auto, V Central, Padding N/A
+                Stat: H Order, H Auto, V N/A, Padding N/A
+            Black Button: N/A Order, H Central, V Central, Padding N/A
 
 2.
     Gray: V Order, H Central, V Top, Padding
-        Description: V Order, H Left, V N/A, Padding N/A
-        NFT Stats: H Order, H Auto, V N/A, Padding N/A
-        Creator: H Order, H Left, V Centrall, Padding N/A
+        Title: H N/A, H Left, V N/A, Padding N/A
+        Description: H N/A, H Left, V N/A, Padding N/A
+        NFT Stats: H Order, H Auto, V Central, Padding N/A
+            Value: H Order, H Left, V Central, Padding N/A
+            Expiration: H Order, H Right, V Central, Padding N/A
+        Creator: H Order, H Left, V Central, Padding N/A
