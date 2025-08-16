@@ -15,4 +15,4 @@ def getRandPort():
 def Home():
     return send_file(os.path.join("assets", "index.html"))
 
-app.run(debug=True, host="localhost", port=getRandPort()) # 5000
+# app.run(debug=True, host="localhost", port=getRandPort()) # 5000

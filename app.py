@@ -1,11 +1,17 @@
 # type: ignore
-
 import sys, os
 from PyQt6.QtWidgets import QApplication # Element Frame
-from PyQt6.QtCore import QUrl, QPoint, Qt # Calculation, Settings
-from PyQt6.QtGui import QGuiApplication, QIcon # Visuals
+from PyQt6.QtCore import QEvent, QObject, QUrl, QPoint, Qt # Calculation, Settings
+from PyQt6.QtGui import QCloseEvent, QGuiApplication, QIcon # Visuals
 from PyQt6.QtWebEngineWidgets import QWebEngineView
 from PyQt6.QtWebEngineCore import QWebEngineSettings
+
+import threading
+import waitress
+
+from server import app as server
+
+from server import getRandPort
 
 WIDTH = 800
 HEIGHT = 800
@@ -18,13 +24,46 @@ class WebRenderer(QWebEngineView):
         super(self.__class__, self).__init__(*args, **kwargs) # super format: super(parent, obj)
 
         self.setWindowTitle(os.environ["PROJECT_NAME"])
-
         self.setWindowIcon(QIcon(os.environ["ICON_PATH"]))
 
+        settings = self.settings()
+        settings.setAttribute(QWebEngineSettings.WebAttribute.PluginsEnabled, True) # Plugin = Mods
+        settings.setAttribute(QWebEngineSettings.WebAttribute.WebGLEnabled, True) # WebGl = 3D
+        settings.setAttribute(QWebEngineSettings.WebAttribute.JavascriptEnabled, True) #! Javascript = Conect with python (ESSENTIAL)
+        settings.setAttribute(QWebEngineSettings.WebAttribute.Accelerated2dCanvasEnabled, True) # Accelerated2dCanvas = Faster 2d render
+        settings.setAttribute(QWebEngineSettings.WebAttribute.AutoLoadImages, True) # AutoloadImages = Load images faster
+
+        self.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground)
+        self.page().setBackgroundColor(Qt.GlobalColor.transparent) # GlobalColor = Color presets
+
+        self.setWindowFlags(Qt.WindowType.Window | Qt.WindowType.FramelessWindowHint | Qt.WindowType.WindowMinMaxButtonsHint)
+
+        self.setAutoFillBackground(False)
+
+        QApplication.instance().installEventFilter(self)
+        self.setMouseTracking(True)
+        
         self.resize(WIDTH, HEIGHT)
 
         self.setUrl(QUrl("file:///C:/Users/User/Downloads/PythonProjects/Project_thing/assets/index.html"))
     
+    def eventFilter(self, obj, event):
+        # if obj.parent() == self and event.type() == ...:
+        #     pass
+        return False
+    
+    def closeEvent(self, event):
+        super().closeEvent(event)
+        return sys.exit(0)
+    
+    def show(self):
+        if self.windowState() == Qt.WindowState.WindowMinimized:
+            self.setWindowState(Qt.WindowState.WindowNoState)
+        self.setWindowFlags(self.windowFlags() | Qt.WindowType.WindowStaysOnTopHint) # Without flags == reset flags
+        super().show()
+        self.setWindowFlags(self.windowFlags() & ~Qt.WindowType.WindowStaysOnTopHint)
+        super().show()
+        
     def centralise(self):
         center = QGuiApplication.primaryScreen().availableGeometry().center() 
         #! self.move(center - QPoint(WIDTH//2, HEIGHT//2)) unsafe
@@ -36,9 +75,28 @@ class WebRenderer(QWebEngineView):
         self.centralise()
         self.show()
 
-app = QApplication(sys.argv)
+def run():
+    host = "localHost"
+    port = getRandPort()
+    if "--server" in sys.argv: # python app.py --server
+        return server.run(debug=True, host=host, port=port, threaded=True)
+    
+    threading.Thread(
+        target=waitress.serve,
+        daemon=True,
+        kwargs={
+            "app": server,
+            "host": host,
+            "port": port,
+            "threads": 8,
+        },
+    ).start()
 
-window = WebRenderer()
-window.show()
+    app = QApplication(sys.argv)
 
-sys.exit(app.exec())
+    window = WebRenderer()
+    window.show()
+    
+    sys.exit(app.exec())
+
+run()

@@ -12,7 +12,8 @@ body {
     justify-content: center; /* horizontal */
     width: 100%;
     height: 100vh;
-    background-color: #0d192b;
+    background-color: rgba(255, 255, 255, 0.5);
+    /* #0d192b */
     padding: 20px;
 }
 
