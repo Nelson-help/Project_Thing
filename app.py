@@ -9,9 +9,7 @@ from PyQt6.QtWebEngineCore import QWebEngineSettings
 import threading
 import waitress
 
-from server import app as server
-
-from server import getRandPort
+from Server.Flask import WebServer
 
 WIDTH = 800
 HEIGHT = 800
@@ -44,8 +42,6 @@ class WebRenderer(QWebEngineView):
         self.setMouseTracking(True)
         
         self.resize(WIDTH, HEIGHT)
-
-        self.setUrl(QUrl("file:///C:/Users/User/Downloads/PythonProjects/Project_thing/assets/index.html"))
     
     def eventFilter(self, obj, event):
         # if obj.parent() == self and event.type() == ...:
@@ -75,9 +71,15 @@ class WebRenderer(QWebEngineView):
         self.centralise()
         self.show()
 
+    def connect(self, server):
+        self.setUrl(QUrl(f"http://{server.host}:{server.port}"))
+        self.centralise()
+
 def run():
-    host = "localHost"
-    port = getRandPort()
+    server = WebServer()
+    host = server.host
+    port = server.port
+
     if "--server" in sys.argv: # python app.py --server
         return server.run(debug=True, host=host, port=port, threaded=True)
     
@@ -95,6 +97,7 @@ def run():
     app = QApplication(sys.argv)
 
     window = WebRenderer()
+    window.connect(server)
     window.show()
     
     sys.exit(app.exec())
