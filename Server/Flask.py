@@ -1,8 +1,9 @@
-from flask import Flask, request, send_file, Response
-import logging 
-import traceback
-import socket # Python - PC - Port communicate
+import logging
 import os
+import socket  # Python - PC - Port communicate
+import traceback
+
+from flask import Flask, Response, request, send_file
 
 app = Flask(__file__)
 
@@ -22,7 +23,8 @@ class WebServer(Flask):
     # __new__ -> class
 
     def __new__(cls):
-        if hasattr(cls, "instance"): return getattr(cls, "instance")
+        if hasattr(cls, "instance"): 
+            return getattr(cls, "instance")
         
         self = super(cls, cls).__new__(cls)
         super(self.__class__, self).__init__(__name__)
@@ -44,23 +46,15 @@ class WebServer(Flask):
         def Home():
             return send_file(os.path.join("..", "assets", "index.html"))
         
-        # Method 1
         @self.route("/assets/<path:file>")
         def Display(file):
             return send_file(os.path.join("..", "assets", file)) 
         
-        # Method 2
-        # @self.route("/assets")
-        # def Display():
-        #     return send_file(os.path.join("..", "assets", "index.html")) 
-        # @self.route("/style.css")
-        # def style():
-        #     return send_file(os.path.join("..", "assets", "style.css"))
-        
         return cls.instance
 
     def __init__(self):
-        if hasattr(self.__class__, "instance"): return
+        if hasattr(self.__class__, "instance"): 
+            return
         super(self.__class__, self).__init__(__name__)
 
 # app.run(debug=True, host=WebServer.host, port=WebServer.port)

@@ -1,13 +1,13 @@
-# type: ignore
-import sys, os
-from PyQt6.QtWidgets import QApplication # Element Frame
-from PyQt6.QtCore import QEvent, QObject, QUrl, QPoint, Qt # Calculation, Settings
-from PyQt6.QtGui import QCloseEvent, QGuiApplication, QIcon # Visuals
-from PyQt6.QtWebEngineWidgets import QWebEngineView
-from PyQt6.QtWebEngineCore import QWebEngineSettings
-
+import os
+import sys
 import threading
+
 import waitress
+from PyQt6.QtCore import QPoint, Qt, QUrl  # Calculation, Settings
+from PyQt6.QtGui import QGuiApplication, QIcon  # Visuals
+from PyQt6.QtWebEngineCore import QWebEngineSettings
+from PyQt6.QtWebEngineWidgets import QWebEngineView
+from PyQt6.QtWidgets import QApplication  # Element Frame
 
 from Server.Flask import WebServer
 
@@ -66,7 +66,8 @@ class WebRenderer(QWebEngineView):
         self.move(center - QPoint(self.width()//2, self.height()//2))
     
     def resize(self, w, h):
-        if (self.width(), self.height()) == (w, h): return
+        if (self.width(), self.height()) == (w, h): 
+            return
         super().resize(w, h)
         self.centralise()
         self.show()
